@@ -1,7 +1,7 @@
 # pages/urls.py
 from django.urls import path, include
 from .views import (homePageView, aboutPageView, raymondPageView,
-                    results, homePost, todos, register, message, logoutView)
+                    results, homePost, todos, register, message, logoutView, secretArea)
 
 
 urlpatterns = [
@@ -15,4 +15,5 @@ urlpatterns = [
     path('message/<str:msg>/<str:title>/', message, name="message"),  # <-- added
     path('', include("django.contrib.auth.urls")), # <-- added
     path("logout/", logoutView, name="logout"),
+    path("secret/", secretArea, name="secret"),
 ]

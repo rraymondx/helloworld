@@ -123,6 +123,12 @@ def logoutView(request):
     print("*****  You are logged out.")
     return HttpResponseRedirect(reverse('home'))
 
+def secretArea(request):
+    if not request.user.is_authenticated:
+        return HttpResponseRedirect(reverse('message',
+               kwargs={'msg': "Please login to access this page.",
+                       'title': "Login required."}, ))
+    return render(request, 'secret.html', {'useremail': request.user.email })
 
 
 
