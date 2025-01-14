@@ -7,6 +7,8 @@ from django.shortcuts import render, HttpResponseRedirect
 from django.http import Http404
 from django.urls import reverse
 from django.views.generic import TemplateView
+from .models import Item, ToDoList
+from django.contrib.auth import logout
 
 def homePageView(request):
     # return request object and specify page.
@@ -85,3 +87,42 @@ def results(request, choice, gmat):
 
     return render(request, 'results.html', {'choice': workExperience, 'gmat':gmat,
                 'prediction':singlePrediction})
+
+def todos(request):
+    print("*** Inside todos()")
+    items = Item.objects
+    itemErrandDetail = items.select_related('todolist')
+    print(itemErrandDetail[0].todolist.name)
+    return render(request, 'ToDoItems.html',
+                {'ToDoItemDetail': itemErrandDetail})
+
+from django.shortcuts import render, redirect
+from .forms import RegisterForm
+
+def register(response):
+    # Handle POST request.
+    if response.method == "POST":
+        form = RegisterForm(response.POST)
+        if form.is_valid():
+            form.save()
+            return HttpResponseRedirect(reverse('message',
+                                                kwargs={'msg': "Your are registered.", 'title': "Success!"}, ))
+    # Handle GET request.
+    else:
+        form = RegisterForm()
+    return render(response, "registration/register.html", {"form":form})
+
+def message(request, msg, title):
+    return render(request, 'message.html', {'msg': msg, 'title': title })
+
+def logoutView(request):
+    print("just before break")
+    pdb.set_trace()
+    print("after trace")
+    logout(request)
+    print("*****  You are logged out.")
+    return HttpResponseRedirect(reverse('home'))
+
+
+
+
